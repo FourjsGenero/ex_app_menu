@@ -1,0 +1,113 @@
+LAYOUT (WINDOWSTYLE="dialog3")
+GRID
+{
+[user             ]                                   [cdat      ]
+------------------------------------------------------------------
+[logo             ]
+[                 ][mntt                               ]
+[                 ]
+[                 ]          [inf1                               ]
+[                 ]          [inf2                               ]
+[                 ]                   [nprg                      ]
+<TREE mt                                              ><GROUP g1 >
+[name                                            |desc][sc01     ]
+[name                                            |desc][sc02     ]
+[name                                            |desc][sc03     ]
+[name                                            |desc][sc04     ]
+[name                                            |desc][sc05     ]
+[name                                            |desc][sc06     ]
+[name                                            |desc][sc07     ]
+[name                                            |desc][sc08     ]
+[name                                            |desc][sc09     ]
+[name                                            |desc][sc10     ]
+[name                                            |desc][sc11     ]
+[name                                            |desc][sc12     ]
+[name                                            |desc][sc13     ]
+[name                                            |desc][sc14     ]
+[name                                            |desc][sc15     ]
+[name                                            |desc]<         >
+<                                                     >[a|d|k|j: ]
+  Program code: [cprg             ] [stp          ]      [cl     ]
+}
+END
+END
+
+ATTRIBUTES
+
+LABEL mntt = FORMONLY.ptitle_parent, SIZEPOLICY=FIXED,
+             STYLE="appmenu_title",
+             JUSTIFY=CENTER;
+IMAGE logo = FORMONLY.comp_logo,     SIZEPOLICY=FIXED,
+                                     AUTOSCALE;
+LABEL user = FORMONLY.user_login,    SIZEPOLICY=FIXED,
+             COLOR=RED;
+LABEL inf1 = FORMONLY.info_1,        SIZEPOLICY=FIXED,
+             STYLE="appmenu_info",
+             JUSTIFY=RIGHT;
+LABEL inf2 = FORMONLY.info_2,        SIZEPOLICY=FIXED,
+             STYLE="appmenu_info",
+             JUSTIFY=RIGHT;
+LABEL nprg = FORMONLY.exec_name,     SIZEPOLICY=FIXED,
+             COLOR=GREEN,
+             JUSTIFY=RIGHT;
+LABEL cdat = FORMONLY.curr_date,     SIZEPOLICY=FIXED,
+             COLOR=CYAN, JUSTIFY=RIGHT;
+
+TREE mt: PARENTIDCOLUMN=parnod,
+         IDCOLUMN=progid;
+EDIT name = FORMONLY.progid_title, TITLE="Option",
+            IMAGECOLUMN=image;
+PHANTOM FORMONLY.parnod;
+PHANTOM FORMONLY.progid;
+PHANTOM FORMONLY.image;
+EDIT desc = FORMONLY.description, TITLE="Description",
+            HIDDEN=USER;
+PHANTOM FORMONLY.ndtype;
+PHANTOM FORMONLY.ptitle;
+PHANTOM FORMONLY.cmdexe;
+
+PHANTOM FORMONLY.mode;
+PHANTOM FORMONLY.root_node;
+EDIT cprg = FORMONLY.prog_code, UPSHIFT, COMPLETER;
+BUTTON stp: accept, TEXT="Start";
+BUTTON   a: si_add, IMAGE="fa-plus",
+                    COMMENT="Add shortcut (CTRL-A)";
+BUTTON   d: si_del, IMAGE="fa-minus",
+                    COMMENT="Delete shortcut (CTRL-D)";
+BUTTON   k: si_mvu, IMAGE="fa-caret-up",
+                    COMMENT="Move up (CTRL-UP)";
+BUTTON   j: si_mvd, IMAGE="fa-caret-down",
+                    COMMENT="Move down (CTRL-DOWN)";
+BUTTON cl: close, TEXT="Close";
+
+GROUP g1: g_shortcuts, TEXT="Shortcuts";
+BUTTON sc01: start01, TEXT="?";
+BUTTON sc02: start02, TEXT="?";
+BUTTON sc03: start03, TEXT="?";
+BUTTON sc04: start04, TEXT="?";
+BUTTON sc05: start05, TEXT="?";
+BUTTON sc06: start06, TEXT="?";
+BUTTON sc07: start07, TEXT="?";
+BUTTON sc08: start08, TEXT="?";
+BUTTON sc09: start09, TEXT="?";
+BUTTON sc10: start10, TEXT="?";
+BUTTON sc11: start11, TEXT="?";
+BUTTON sc12: start12, TEXT="?";
+BUTTON sc13: start13, TEXT="?";
+BUTTON sc14: start14, TEXT="?";
+BUTTON sc15: start15, TEXT="?";
+
+END
+
+INSTRUCTIONS
+SCREEN RECORD sr(
+  FORMONLY.progid_title,
+  FORMONLY.parnod,
+  FORMONLY.progid,
+  FORMONLY.image,
+  FORMONLY.description,
+  FORMONLY.ndtype,
+  FORMONLY.ptitle,
+  FORMONLY.cmdexe
+);
+END

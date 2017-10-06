@@ -17,8 +17,8 @@ keep the launcher open after selecting a program to start.
 
 ## Prerequisites
 
-* Genero BDL 3.00+
-* Genero Desktop Client 3.00+
+* Genero BDL 3.10+
+* Genero Desktop Client 3.10+
 * GNU Make
 
 ## Compilation from command line

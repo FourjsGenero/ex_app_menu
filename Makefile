@@ -8,6 +8,9 @@ PROGMOD=\
 
 all: $(PROGMOD) $(FORMS)
 
+run: all
+	fglrun appmenu_test
+
 %.42f: %.per
 	fglform -M $<
 

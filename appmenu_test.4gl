@@ -17,7 +17,7 @@ MAIN
           ATTRIBUTES(UNBUFFERED, ACCEPT=FALSE)
        BEFORE INPUT
           NEXT FIELD curr_node
-       ON ACTION start_menu ATTRIBUTES(TEXT="Menu")
+       ON ACTION start_menu
           LET rec.curr_node = appmenu_exec("mike", "fourjs_logo.png",
                                            rec.root_node, rec.curr_node,
                                            "Info 1", "Info 2")

@@ -59,7 +59,7 @@ PRIVATE FUNCTION fetch_tree(p_parent)
     END FOREACH
 
     FOR i = 1 TO n
-        LET j = tree_arr.getlength() + 1
+        LET j = tree_arr.getLength() + 1
         LET tree_arr[j].progid_title = SFMT("%1 - %2",
                                             a[i].progid CLIPPED,
                                             a[i].ptitle CLIPPED)
@@ -220,7 +220,7 @@ PRIVATE FUNCTION complete_code_prog(d, val)
            val VARCHAR(50)
     DEFINE codes DYNAMIC ARRAY OF STRING,
            x, i SMALLINT
-    IF LENGTH(val)<=1 THEN
+    IF length(val)<=1 THEN
        CALL d.setCompleterItems(codes)
        RETURN
     END IF
@@ -247,7 +247,7 @@ PRIVATE FUNCTION setup_dialog(d)
        -- IF x>0 THEN
        --    LET can_exec = ( tree_arr[x].ndtype == "P" )
        -- END IF
-       LET can_exec = (LENGTH(params.prog_code)>2)
+       LET can_exec = (length(params.prog_code)>2)
     ELSE
        LET x = d.getCurrentRow("sr")
        IF x>0 THEN
@@ -277,8 +277,8 @@ PRIVATE FUNCTION start_shortcut(d,x)
 END FUNCTION
 
 PRIVATE FUNCTION config_filename()
-    IF LENGTH(params.user_login)==0
-    OR LENGTH(params.root_node)==0
+    IF length(params.user_login)==0
+    OR length(params.root_node)==0
     THEN
        ERROR "Cannot build configuration file name"
        RETURN NULL

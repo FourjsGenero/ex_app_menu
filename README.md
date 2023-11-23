@@ -1,4 +1,4 @@
-# Genero program launch menu  
+# Genero program launch menu
 
 ## Description
 
@@ -53,7 +53,7 @@ the program tree as set of nodes with parent/child references:
         ptitle  VARCHAR(40) NOT NULL,              -- title to be displayed
         parnod  VARCHAR(10),                       -- link to parent node id
         ndposi  SMALLINT NOT NULL,                 -- position in parent node
-        cmdexe  VARCHAR(100),                      -- command to execute 
+        cmdexe  VARCHAR(100),                      -- command to execute
         UNIQUE (progid, parnod)
     )
 ```

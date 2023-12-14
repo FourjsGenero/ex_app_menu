@@ -4,8 +4,7 @@
 
 This Genero BDL demo implements a general launch menu to start other programs.
 
-The module implements a treeview to let the user browse in the program tree
-and start a program.
+The module implements a treeview to browse the program tree and start a program.
 
 Each program is identified by a code and can be executed directly with the code.
 

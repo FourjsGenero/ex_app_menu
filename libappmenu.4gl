@@ -16,7 +16,7 @@ DEFINE tree_arr DYNAMIC ARRAY OF RECORD
           progid_title STRING,
           parnod STRING,
           progid STRING,
-          image STRING,
+          ndicon STRING,
           description STRING,
           ptitle STRING,
           ndtype CHAR(1),
@@ -41,13 +41,12 @@ DEFINE config RECORD
            END RECORD
        END RECORD
 
-PRIVATE FUNCTION fetch_tree(p_parent)
-    DEFINE p_parent VARCHAR(50)
+PRIVATE FUNCTION fetch_tree(p_parent VARCHAR(50)) RETURNS ()
     DEFINE a DYNAMIC ARRAY OF appmenu_t
     DEFINE t appmenu_t
     DEFINE i, j, n INT
 
-    DECLARE cu1 CURSOR FOR 
+    DECLARE cu1 CURSOR FOR
         SELECT * FROM appmenu_tree
          WHERE parnod = p_parent
           ORDER BY ndposi
@@ -65,7 +64,7 @@ PRIVATE FUNCTION fetch_tree(p_parent)
                                             a[i].ptitle CLIPPED)
         LET tree_arr[j].progid = a[i].progid CLIPPED
         LET tree_arr[j].parnod = a[i].parnod CLIPPED
-        LET tree_arr[j].image = typmen_image(a[i].ndtype)
+        LET tree_arr[j].ndicon = typmen_image(a[i].ndtype)
         LET tree_arr[j].description = util.JSON.stringify(a[i])
         LET tree_arr[j].ndtype = a[i].ndtype
         LET tree_arr[j].ptitle = a[i].ptitle CLIPPED
@@ -75,20 +74,21 @@ PRIVATE FUNCTION fetch_tree(p_parent)
 
 END FUNCTION
 
-PUBLIC FUNCTION appmenu_init()
+PUBLIC FUNCTION appmenu_init() RETURNS ()
     CALL add_presentation_styles()
 END FUNCTION
 
-PUBLIC FUNCTION appmenu_fini()
+PUBLIC FUNCTION appmenu_fini() RETURNS ()
 END FUNCTION
 
-PUBLIC FUNCTION appmenu_exec(login, logo, root_node, curr_node, info_1, info_2)
-    DEFINE login STRING,
-           logo STRING,
-           root_node STRING,
-           curr_node STRING,
-           info_1 STRING,
-           info_2 STRING
+PUBLIC FUNCTION appmenu_exec(
+    login STRING,
+    logo STRING,
+    root_node STRING,
+    curr_node STRING,
+    info_1 STRING,
+    info_2 STRING
+) RETURNS STRING
     DEFINE tmp STRING
 
     LET tmp = SFMT("APPMENU - %1", root_node)
@@ -194,8 +194,7 @@ PUBLIC FUNCTION appmenu_exec(login, logo, root_node, curr_node, info_1, info_2)
 
 END FUNCTION
 
-PRIVATE FUNCTION tree_arr_lookup(progid)
-    DEFINE progid STRING
+PRIVATE FUNCTION tree_arr_lookup(progid STRING) RETURNS INTEGER
     DEFINE x INTEGER
     FOR x=1 TO tree_arr.getLength()
         IF tree_arr[x].progid=progid THEN
@@ -205,9 +204,7 @@ PRIVATE FUNCTION tree_arr_lookup(progid)
     RETURN 0
 END FUNCTION
 
-PRIVATE FUNCTION jump_to(d,cp)
-    DEFINE d ui.Dialog,
-           cp VARCHAR(50)
+PRIVATE FUNCTION jump_to(d ui.Dialog, cp VARCHAR(50)) RETURNS ()
     DEFINE x INTEGER
     LET x = tree_arr_lookup(cp)
     IF x > 0 THEN
@@ -215,11 +212,9 @@ PRIVATE FUNCTION jump_to(d,cp)
     END IF
 END FUNCTION
 
-PRIVATE FUNCTION complete_code_prog(d, val)
-    DEFINE d ui.Dialog,
-           val VARCHAR(50)
-    DEFINE codes DYNAMIC ARRAY OF STRING,
-           x, i SMALLINT
+PRIVATE FUNCTION complete_code_prog(d ui.Dialog, val VARCHAR(50)) RETURNS ()
+    DEFINE codes DYNAMIC ARRAY OF STRING
+    DEFINE x, i SMALLINT
     IF length(val)<=1 THEN
        CALL d.setCompleterItems(codes)
        RETURN
@@ -236,8 +231,7 @@ PRIVATE FUNCTION complete_code_prog(d, val)
     CALL d.setCompleterItems(codes)
 END FUNCTION
 
-PRIVATE FUNCTION setup_dialog(d)
-    DEFINE d ui.Dialog
+PRIVATE FUNCTION setup_dialog(d ui.Dialog) RETURNS ()
     DEFINE x INTEGER,
            can_exec BOOLEAN
     IF d.getCurrentItem()=="prog_code" THEN
@@ -258,9 +252,7 @@ PRIVATE FUNCTION setup_dialog(d)
     CALL setup_shortcuts(d, params.prog_code)
 END FUNCTION
 
-PRIVATE FUNCTION start_shortcut(d,x)
-    DEFINE d ui.Dialog,
-           x SMALLINT
+PRIVATE FUNCTION start_shortcut(d ui.Dialog, x SMALLINT) RETURNS (STRING,STRING)
     DEFINE i SMALLINT,
            cp STRING
     IF x>=1 AND x<=config.shortcuts.getLength() THEN
@@ -276,7 +268,7 @@ PRIVATE FUNCTION start_shortcut(d,x)
     RETURN "?", NULL
 END FUNCTION
 
-PRIVATE FUNCTION config_filename()
+PRIVATE FUNCTION config_filename() RETURNS STRING
     IF length(params.user_login)==0
     OR length(params.root_node)==0
     THEN
@@ -290,7 +282,7 @@ PRIVATE FUNCTION config_filename()
                )
 END FUNCTION
 
-PRIVATE FUNCTION load_config()
+PRIVATE FUNCTION load_config() RETURNS ()
     DEFINE cs STRING,
            fn STRING,
            ch base.Channel
@@ -310,7 +302,7 @@ PRIVATE FUNCTION load_config()
     END TRY
 END FUNCTION
 
-PRIVATE FUNCTION save_config()
+PRIVATE FUNCTION save_config() RETURNS ()
     DEFINE cs STRING,
            fn STRING,
            ch base.Channel
@@ -327,12 +319,13 @@ PRIVATE FUNCTION save_config()
     END TRY
 END FUNCTION
 
-PRIVATE FUNCTION set_element_attribute(f, t, n, a, v)
-    DEFINE f ui.Form,
-           t STRING,
-           n STRING,
-           a STRING,
-           v STRING
+PRIVATE FUNCTION set_element_attribute(
+    f ui.Form,
+    t STRING,
+    n STRING,
+    a STRING,
+    v STRING
+) RETURNS ()
     DEFINE root, node om.DomNode,
            nl om.NodeList
     LET root = f.getNode()
@@ -343,9 +336,7 @@ PRIVATE FUNCTION set_element_attribute(f, t, n, a, v)
     END IF
 END FUNCTION
 
-PRIVATE FUNCTION setup_shortcuts(d,cp)
-    DEFINE d ui.Dialog,
-           cp STRING
+PRIVATE FUNCTION setup_shortcuts(d ui.Dialog, cp STRING) RETURNS ()
     DEFINE x SMALLINT,
            f ui.Form,
            an, lcp, cmt STRING,
@@ -382,8 +373,7 @@ PRIVATE FUNCTION setup_shortcuts(d,cp)
     --CALL f.setElementHidden("g_shortcuts", (config.shortcuts.getLength()==0) )
 END FUNCTION
 
-PRIVATE FUNCTION lookup_shortcut(cp)
-    DEFINE cp STRING
+PRIVATE FUNCTION lookup_shortcut(cp STRING) RETURNS INTEGER
     DEFINE x SMALLINT
     FOR x=1 TO config.shortcuts.getLength()
         IF config.shortcuts[x].prog_code == cp THEN
@@ -393,8 +383,7 @@ PRIVATE FUNCTION lookup_shortcut(cp)
     RETURN 0
 END FUNCTION
 
-PRIVATE FUNCTION add_shortcut(cp)
-    DEFINE cp STRING
+PRIVATE FUNCTION add_shortcut(cp STRING) RETURNS ()
     DEFINE x SMALLINT
     LET x = lookup_shortcut(cp) 
     IF x==0 THEN
@@ -406,9 +395,7 @@ PRIVATE FUNCTION add_shortcut(cp)
     END IF
 END FUNCTION
 
-PRIVATE FUNCTION mvt_shortcut(cp,dir)
-    DEFINE cp STRING,
-           dir CHAR(1)
+PRIVATE FUNCTION mvt_shortcut(cp STRING, dir CHAR(1)) RETURNS ()
     DEFINE x SMALLINT
     LET x = lookup_shortcut(cp) 
     IF x == 0 THEN RETURN END IF
@@ -427,8 +414,7 @@ PRIVATE FUNCTION mvt_shortcut(cp,dir)
     END IF
 END FUNCTION
 
-PRIVATE FUNCTION del_shortcut(cp)
-    DEFINE cp STRING
+PRIVATE FUNCTION del_shortcut(cp STRING) RETURNS ()
     DEFINE x SMALLINT
     CASE cp
       WHEN "<FIRST>"
@@ -443,8 +429,7 @@ PRIVATE FUNCTION del_shortcut(cp)
     END CASE
 END FUNCTION
 
-PRIVATE FUNCTION typmen_image(ndtype)
-    DEFINE ndtype STRING
+PRIVATE FUNCTION typmen_image(ndtype STRING) RETURNS STRING
     CASE ndtype
         WHEN "P" RETURN "fa-cogs"
         WHEN "N" RETURN "fa-cube"
@@ -452,8 +437,7 @@ PRIVATE FUNCTION typmen_image(ndtype)
     RETURN NULL
 END FUNCTION
 
-PRIVATE FUNCTION get_title(parnod)
-    DEFINE parnod STRING
+PRIVATE FUNCTION get_title(parnod STRING) RETURNS VARCHAR(50)
     DEFINE x INTEGER,
            res VARCHAR(50)
     IF parnod==params.root_node THEN
@@ -469,13 +453,14 @@ PRIVATE FUNCTION get_title(parnod)
     RETURN res
 END FUNCTION
 
-PRIVATE FUNCTION get_aui_node(p, tagname, name)
-    DEFINE p om.DomNode,
-           tagname STRING,
-           name STRING
+PRIVATE FUNCTION get_aui_node(
+    p om.DomNode,
+    tagname STRING,
+    aname STRING
+) RETURNS om.DomNode
     DEFINE nl om.NodeList
-    IF name IS NOT NULL THEN
-       LET nl = p.selectByPath(SFMT("//%1[@name=\"%2\"]",tagname,name))
+    IF aname IS NOT NULL THEN
+       LET nl = p.selectByPath(SFMT("//%1[@name=\"%2\"]",tagname,aname))
     ELSE
        LET nl = p.selectByPath(SFMT("//%1",tagname))
     END IF
@@ -486,31 +471,26 @@ PRIVATE FUNCTION get_aui_node(p, tagname, name)
     END IF
 END FUNCTION
 
-PRIVATE FUNCTION add_style(pn, name)
-    DEFINE pn om.DomNode,
-           name STRING
+PRIVATE FUNCTION add_style(pn om.DomNode, aname STRING) RETURNS om.DomNode
     DEFINE nn om.DomNode
-    LET nn = get_aui_node(pn, "Style", name)
+    LET nn = get_aui_node(pn, "Style", aname)
     IF nn IS NOT NULL THEN RETURN NULL END IF
     LET nn = pn.createChild("Style")
-    CALL nn.setAttribute("name", name)
+    CALL nn.setAttribute("name", aname)
     RETURN nn
 END FUNCTION
 
-PRIVATE FUNCTION set_style_attribute(pn, name, value)
-    DEFINE pn om.DomNode,
-           name STRING,
-           value STRING
+PRIVATE FUNCTION set_style_attribute(pn om.DomNode, aname STRING, value STRING) RETURNS ()
     DEFINE sa om.DomNode
-    LET sa = get_aui_node(pn, "StyleAttribute", name)
+    LET sa = get_aui_node(pn, "StyleAttribute", aname)
     IF sa IS NULL THEN
        LET sa = pn.createChild("StyleAttribute")
-       CALL sa.setAttribute("name", name)
+       CALL sa.setAttribute("name", aname)
     END IF
     CALL sa.setAttribute("value", value)
 END FUNCTION
 
-PUBLIC FUNCTION add_presentation_styles()
+PUBLIC FUNCTION add_presentation_styles() RETURNS ()
     DEFINE rn om.DomNode,
            sl om.DomNode,
            nn om.DomNode

@@ -56,10 +56,10 @@ LABEL cdat = FORMONLY.curr_date,     SIZEPOLICY=FIXED,
 TREE mt: PARENTIDCOLUMN=parnod,
          IDCOLUMN=progid;
 EDIT name = FORMONLY.progid_title, TITLE="Option",
-            IMAGECOLUMN=image;
+            IMAGECOLUMN=ndicon;
 PHANTOM FORMONLY.parnod;
 PHANTOM FORMONLY.progid;
-PHANTOM FORMONLY.image;
+PHANTOM FORMONLY.ndicon;
 EDIT desc = FORMONLY.description, TITLE="Description",
             HIDDEN=USER;
 PHANTOM FORMONLY.ndtype;
@@ -104,7 +104,7 @@ SCREEN RECORD sr(
   FORMONLY.progid_title,
   FORMONLY.parnod,
   FORMONLY.progid,
-  FORMONLY.image,
+  FORMONLY.ndicon,
   FORMONLY.description,
   FORMONLY.ndtype,
   FORMONLY.ptitle,
